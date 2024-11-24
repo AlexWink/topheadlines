@@ -1,21 +1,17 @@
 package alexandrefournier.topheadlines
 
+import alexandrefournier.topheadlines.ui.screen.ArticleDetailsScreen
 import alexandrefournier.topheadlines.ui.screen.ArticlesScreen
 import alexandrefournier.topheadlines.ui.theme.TopHeadlinesTheme
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.KoinAndroidContext
 
 class MainActivity : ComponentActivity() {
@@ -27,28 +23,39 @@ class MainActivity : ComponentActivity() {
         setContent {
             TopHeadlinesTheme {
                 KoinAndroidContext {
-                    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-                    Scaffold(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .nestedScroll(scrollBehavior.nestedScrollConnection),
-                        topBar = {
-                            TopAppBar(
-                                { Text("News") },
-                                scrollBehavior = scrollBehavior
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = Destination.Articles,
+                        // modifier = Modifier
+                        //     .fillMaxSize()
+                    ) {
+                        composable<Destination.Articles> {
+                            ArticlesScreen(
+                                onArticleClicked = { id ->
+                                    navController.navigate(
+                                        route = Destination.ArticleDetails(
+                                            id
+                                        )
+                                    )
+                                }
                             )
                         }
-                    ) { innerPadding ->
-                        Box(
-                            Modifier
-                                .fillMaxSize()
-                                .padding(innerPadding)
-                        ) {
-                            ArticlesScreen()
+                        composable<Destination.ArticleDetails> {
+                            ArticleDetailsScreen {
+                                navController.popBackStack()
+                            }
                         }
                     }
                 }
             }
         }
     }
+}
+
+sealed interface Destination {
+    @Serializable
+    object Articles
+    @Serializable
+    class ArticleDetails(val id: String)
 }

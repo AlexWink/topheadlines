@@ -36,7 +36,11 @@ fun createHttpClient(json: Json) = HttpClient {
 class ApiBridge(private val client: HttpClient) : KoinComponent {
 
     suspend fun getTopHeadlines(sources: List<SourceDto>) = client.safeGetRequest<TopHeadlinesDto> {
-        buildDefaultRequest("top-headlines?sources=${sources.map { it.id }.fastJoinToString(",")}")
+        buildDefaultRequest(
+            "top-headlines?sources=${
+                sources.map { it.id }.fastJoinToString(",")
+            }&pageSize=100"
+        )
     }
 
     suspend fun findSources() = client.safeGetRequest<SourcesDto> {

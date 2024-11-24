@@ -15,14 +15,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -31,46 +37,69 @@ import coil3.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ArticlesScreen() {
+fun ArticlesScreen(onArticleClicked: (String) -> Unit) {
     val viewModel: ArticlesViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    ArticlesScreen(uiState, viewModel::fetchArticles)
+    ArticlesScreen(uiState, viewModel::fetchArticles, onArticleClicked)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticlesScreen(uiState: ArticlesUiState, onRefreshClicked: () -> Unit) {
-    Column(
+fun ArticlesScreen(
+    uiState: ArticlesUiState,
+    onRefreshClicked: () -> Unit,
+    onArticleClicked: (String) -> Unit
+) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        when (uiState) {
-            is ArticlesUiState.Loading -> {
-                Text("Loading articles...")
-            }
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            TopAppBar(
+                {
+                    Text("News")
+                },
+                scrollBehavior = scrollBehavior
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp)
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            when (uiState) {
+                is ArticlesUiState.Loading -> {
+                    CircularProgressIndicator()
+                }
 
-            is ArticlesUiState.Loaded -> {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    contentPadding = PaddingValues(vertical = 10.dp),
-                ) {
-                    val articles = uiState.articles
-                    items(articles.size) { index ->
-                        ArticleItemView(
-                            article = articles[index],
-                            onClicked = { }
-                        )
+                is ArticlesUiState.Loaded -> {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        contentPadding = PaddingValues(vertical = 10.dp),
+                    ) {
+                        val articles = uiState.articles
+                        items(articles.size) { index ->
+                            ArticleItemView(
+                                article = articles[index],
+                                onClicked = {
+                                    onArticleClicked(articles[index].id)
+                                }
+                            )
+                        }
                     }
                 }
-            }
 
-            is ArticlesUiState.Error -> {
-                Text("Error: ${uiState.message}")
-                Button(onRefreshClicked) {
-                    Text("Refresh")
+                is ArticlesUiState.Error -> {
+                    Text("Error: ${uiState.message}")
+                    Button(onRefreshClicked) {
+                        Text("Refresh")
+                    }
                 }
             }
         }
