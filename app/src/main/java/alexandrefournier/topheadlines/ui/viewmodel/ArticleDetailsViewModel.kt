@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class ArticleDetailsViewModel(
-    private val repository: ArticlesRepository,
+    repository: ArticlesRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val articleId: String = savedStateHandle.toRoute<Destination.ArticleDetails>().id
