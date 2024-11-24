@@ -8,8 +8,12 @@ interface ArticlesRepository {
 
 class ArticlesRepositoryImpl(private val apiBridge: ApiBridge) : ArticlesRepository {
     override suspend fun fetchArticles(): Result<TopHeadlinesDto> {
-        val sources = apiBridge.findSources()
-        return sources.fold({ return@fold apiBridge.getTopHeadlines(it.sources) }) {
+        val sourcesResult = apiBridge.findSources()
+        return sourcesResult.fold(onSuccess =
+        { sources ->
+            return@fold apiBridge.getTopHeadlines(sources.sources.filterNot { it.id.contains("google-news") })
+        }
+        ) {
             Result.failure(
                 it
             )

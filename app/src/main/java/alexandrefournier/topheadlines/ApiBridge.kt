@@ -29,7 +29,7 @@ fun createHttpClient(json: Json) = HttpClient {
     }
     install(Logging) {
         logger = Logger.ANDROID
-        level = LogLevel.ALL
+        level = LogLevel.BODY
     }
 }
 
