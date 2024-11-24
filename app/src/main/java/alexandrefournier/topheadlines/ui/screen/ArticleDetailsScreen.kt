@@ -1,5 +1,6 @@
 package alexandrefournier.topheadlines.ui.screen
 
+import alexandrefournier.topheadlines.R
 import alexandrefournier.topheadlines.ui.viewmodel.ArticleDetailsUiState
 import alexandrefournier.topheadlines.ui.viewmodel.ArticleDetailsViewModel
 import android.content.Intent
@@ -37,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
@@ -57,15 +59,18 @@ fun ArticleDetailsScreen(uiState: ArticleDetailsUiState, onBackClicked: () -> Un
         .fillMaxSize()
         .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(title = {
-                Text("News details")
-            }, navigationIcon = {
-                IconButton(onBackClicked) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back button"
-                    )
-                }
-            }, scrollBehavior = scrollBehavior
+            TopAppBar(
+                title = {
+                    Text(stringResource(R.string.news_details))
+                },
+                navigationIcon = {
+                    IconButton(onBackClicked) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back button"
+                        )
+                    }
+                },
+                scrollBehavior = scrollBehavior
             )
         }) { innerPadding ->
         Column(
@@ -108,12 +113,14 @@ fun ArticleDetailsScreen(uiState: ArticleDetailsUiState, onBackClicked: () -> Un
                         )
                         Row {
                             val context = LocalContext.current
-                            FilledIconButton(onClick = {
-                                article.url?.let { url ->
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                                    context.startActivity(intent)
+                            FilledIconButton(
+                                onClick = {
+                                    article.url?.let { url ->
+                                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                        context.startActivity(intent)
+                                    }
                                 }
-                            }) {
+                            ) {
                                 Icon(Icons.Default.Search, contentDescription = "Search url")
                             }
                             Spacer(Modifier.width(10.dp))
@@ -128,7 +135,7 @@ fun ArticleDetailsScreen(uiState: ArticleDetailsUiState, onBackClicked: () -> Un
                 is ArticleDetailsUiState.Error -> {
                     Text(uiState.message)
                     Button(onBackClicked) {
-                        Text("Back")
+                        Text(stringResource(R.string.back))
                     }
                 }
             }

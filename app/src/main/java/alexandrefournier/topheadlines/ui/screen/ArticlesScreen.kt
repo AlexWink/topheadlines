@@ -1,5 +1,6 @@
 package alexandrefournier.topheadlines.ui.screen
 
+import alexandrefournier.topheadlines.R
 import alexandrefournier.topheadlines.model.Article
 import alexandrefournier.topheadlines.ui.viewmodel.ArticlesUiState
 import alexandrefournier.topheadlines.ui.viewmodel.ArticlesViewModel
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,7 +61,7 @@ fun ArticlesScreen(
         topBar = {
             TopAppBar(
                 {
-                    Text("News")
+                    Text(stringResource(R.string.app_name))
                 },
                 scrollBehavior = scrollBehavior
             )
@@ -98,7 +100,7 @@ fun ArticlesScreen(
                 is ArticlesUiState.Error -> {
                     Text("Error: ${uiState.message}")
                     Button(onRefreshClicked) {
-                        Text("Refresh")
+                        Text(stringResource(R.string.refresh))
                     }
                 }
             }
