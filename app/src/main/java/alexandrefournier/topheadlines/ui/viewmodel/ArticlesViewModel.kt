@@ -18,6 +18,7 @@ class ArticlesViewModel(private val repository: ArticlesRepository) : ViewModel(
 
     fun fetchArticles() {
         viewModelScope.launch {
+            _uiState.value = ArticlesUiState.Loading
             repository.fetchArticles().onSuccess {
                 val articles = it.articles
                 _uiState.value = ArticlesUiState.Loaded(articles)

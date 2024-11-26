@@ -5,7 +5,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
 
-
 class TopHeadlinesApp : Application() {
     override fun onCreate() {
         super.onCreate()
@@ -13,8 +12,7 @@ class TopHeadlinesApp : Application() {
         startKoin {
             androidLogger()
             androidContext(this@TopHeadlinesApp)
-            modules(appModule)
+            modules(appModule, productionModule)
         }
-
     }
 }

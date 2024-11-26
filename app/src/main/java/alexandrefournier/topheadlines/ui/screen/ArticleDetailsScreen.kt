@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -45,8 +46,9 @@ import coil3.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ArticleDetailsScreen(onBackClicked: () -> Unit) {
+fun ArticleDetailsScreen(articleId: String, onBackClicked: () -> Unit) {
     val viewModel: ArticleDetailsViewModel = koinViewModel()
+    viewModel.setArticleId(articleId)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     ArticleDetailsScreen(uiState, onBackClicked)
 }
@@ -83,7 +85,7 @@ fun ArticleDetailsScreen(uiState: ArticleDetailsUiState, onBackClicked: () -> Un
         ) {
             when (uiState) {
                 is ArticleDetailsUiState.Loading -> {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(Modifier.testTag("articleDetailsProgressIndicator"))
                 }
 
                 is ArticleDetailsUiState.Loaded -> {
@@ -134,7 +136,7 @@ fun ArticleDetailsScreen(uiState: ArticleDetailsUiState, onBackClicked: () -> Un
 
                 is ArticleDetailsUiState.Error -> {
                     Text(uiState.message)
-                    Button(onBackClicked) {
+                    Button(onBackClicked, Modifier.testTag("articleDetailsBackButton")) {
                         Text(stringResource(R.string.back))
                     }
                 }

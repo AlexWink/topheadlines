@@ -18,16 +18,13 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "alexandrefournier.topheadlines.InstrumentationTestRunner"
 
-        //load the values from .properties file
         val keystoreFile = project.rootProject.file("apikeys.properties")
         val properties = Properties()
         properties.load(keystoreFile.inputStream())
 
-
-        //return empty key in case something goes wrong
-        val apiKey = properties.getProperty("NEWS_API_KEY") ?: ""
+        val apiKey = properties.getProperty("NEWS_API_KEY")!!
         buildConfigField(
             type = "String",
             name = "NEWS_API_KEY",
@@ -72,8 +69,8 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.koin.android)
+    implementation(libs.koin.test)
     implementation(libs.koin.compose)
-    // implementation(libs.koin.navigation)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.logging)
@@ -85,11 +82,13 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network)
 
-    testImplementation(libs.junit)
+    implementation(libs.junit)
+    androidTestImplementation(libs.androidx.runner)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.kotlinx.coroutines.test)
 }

@@ -10,13 +10,15 @@ import org.koin.dsl.module
 
 val appModule = module {
     singleOf(::createJson)
-    // single { createHttpClient(get(), get()) }
     singleOf(::createHttpClient)
     singleOf(::ApiBridge)
-    singleOf(::ArticlesRepositoryImpl) bind ArticlesRepository::class
 
     viewModelOf(::ArticlesViewModel)
     viewModelOf(::ArticleDetailsViewModel)
+}
+
+val productionModule = module {
+    singleOf(::ArticlesRepositoryImpl) bind ArticlesRepository::class
 }
 
 fun createJson() = Json { isLenient = true; ignoreUnknownKeys = true; prettyPrint = true }
