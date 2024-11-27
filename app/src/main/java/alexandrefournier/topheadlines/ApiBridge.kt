@@ -52,6 +52,10 @@ class ApiBridge(private val client: HttpClient) : KoinComponent {
     ): Result<T> {
         return try {
             val response = get { block() }
+            val statusCode = response.status.value
+            if (statusCode == 401) {
+                return Result.failure(Throwable("Error authenticating to the server, please refer to the README to see how to add an API key."))
+            }
             Result.success(response.body())
         } catch (e: Exception) {
             Log.e("Api Error", e.message ?: e.toString())

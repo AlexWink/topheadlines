@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException
 import java.util.Properties
 
 plugins {
@@ -22,9 +23,14 @@ android {
 
         val keystoreFile = project.rootProject.file("apikeys.properties")
         val properties = Properties()
-        properties.load(keystoreFile.inputStream())
-
-        val apiKey = properties.getProperty("NEWS_API_KEY")!!
+        try {
+            properties.load(keystoreFile.inputStream())
+        } catch (e: FileNotFoundException) {
+            project.logger.error("NEWS API key missing: $e")
+        } catch (e: Exception) {
+            project.logger.error("NEWS API key error: $e")
+        }
+        val apiKey = properties.getProperty("NEWS_API_KEY") ?: "\"\""
         buildConfigField(
             type = "String",
             name = "NEWS_API_KEY",
