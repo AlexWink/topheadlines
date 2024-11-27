@@ -1,9 +1,6 @@
 # Top Headlines
 
-This project demonstrates various Android development skills, highlighting a *
-*Model-View-ViewModel (MVVM)** architecture and modern best practices. While the design and
-functionality are intentionally minimal, this app serves as a foundation for creating a more
-feature-rich and polished real-world application.
+This project demonstrates various Android development skills, highlighting a **Model-View-ViewModel (MVVM)** architecture and modern best practices. While the design and functionality are intentionally minimal, this app serves as a foundation for creating a more feature-rich and polished real-world application.
 
 ## Prerequisites
 
