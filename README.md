@@ -91,3 +91,4 @@ error management is recommended.
 Approximately **10 hours** were invested in developing this project, including setup,
 implementation, and testing.
 
+> **Note**: ChatGPT was used to format the README and improve the english syntax.
